@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 import org.jibble.pircbot.*;
 
 
@@ -73,20 +75,63 @@ public class BuddyBot extends PircBot {
     	
     }
     
+    public int rollDrop(){
+
+    	int sum = 0;
+    	int[] Rolls = new int[4];
+		Dice dice = new Dice(6);
+
+		for (int i = 0; i < 4; i++){
+
+			Rolls[i]=dice.Roll(1);
+
+		}
+
+		Arrays.sort(Rolls);
+		Rolls[0]=0;
+
+		for (int i = 0; i < 4; i++){
+
+			sum += Rolls[i];
+
+		}
+
+    	return sum;
+
+    }
     
     //Method to roll an "honest" stat Char. User can specify the number of times they would like the dice rolled.
     //Current method will only work correctly with 3d6 variant, need to add RollDrop method for 4d6 variant. Once this change is made add a check for the value of times.
+    //In the future may include the arguement String sender. Could then save the character in a text file with the name of the sender. Check to see if previous file exists.
+    //Could also allow "roll honest character 3d6 Dunkster" call, with "Dunkster" being the name of the file (substring(27, (message.length()-1))
     public void honestChar(int times, String channel){
     	
-    	Dice dice = new Dice(6);
-    	sendMessage(channel, "Strength: " + dice.Roll(3));
-    	sendMessage(channel, "Dexterity: " + dice.Roll(3));
-    	sendMessage(channel, "Constitution: " + dice.Roll(3));
-    	sendMessage(channel, "Wisdom: " + dice.Roll(3));
-    	sendMessage(channel, "Intelligence: " + dice.Roll(3));
-    	sendMessage(channel, "Charisma: " + dice.Roll(3));
+    	if (times == 3){
+    		
+    		sendMessage(channel, "Hey, I made you a guy! I think I'll call him Spike... Check it out!");
+    		Dice dice = new Dice(6);
+    		sendMessage(channel, "Strength: " + dice.Roll(3));
+    		sendMessage(channel, "Dexterity: " + dice.Roll(3));
+    		sendMessage(channel, "Constitution: " + dice.Roll(3));
+    		sendMessage(channel, "Wisdom: " + dice.Roll(3));
+    		sendMessage(channel, "Intelligence: " + dice.Roll(3));
+    		sendMessage(channel, "Charisma: " + dice.Roll(3));
+    		
+    	}
     	
+    	else if (times ==4){
+    		
+    		sendMessage(channel, "So I made your guy. I hope you like him. I think I'ma call him Timmy...");
+    		sendMessage(channel, "Strength: " + rollDrop());
+    		sendMessage(channel, "Dexterity: " + rollDrop());
+    		sendMessage(channel, "Constitution: " + rollDrop());
+    		sendMessage(channel, "Wisdom: " + rollDrop());
+    		sendMessage(channel, "Intelligence: " + rollDrop());
+    		sendMessage(channel, "Charisma: " + rollDrop());
+    		
+    	}
     }
+    
     
     
 }
