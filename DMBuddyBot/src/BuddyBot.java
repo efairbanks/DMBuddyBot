@@ -6,7 +6,7 @@ public class BuddyBot extends PircBot {
 
     public BuddyBot() {
 
-        this.setName("DMBuddyBot1");
+        this.setName("DMBuddyBot");
 
     }
 
@@ -16,19 +16,8 @@ public class BuddyBot extends PircBot {
         
         if (message.equalsIgnoreCase("roll")) {
 
-        	Dice d6 = new Dice(20);
+        	Dice d6 = new Dice(6);
         	sendMessage(channel, "Ok " + sender + "! The number I rolled for you is " + d6.Roll(1));
-
-        }
-        if (message.equalsIgnoreCase("GTFO")) {
-
-        	sendMessage(channel, "Sick of your shit anyway. Roll your own fucking dice.");
-        	try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-        	quitServer();
 
         }
 
