@@ -6,10 +6,10 @@ public class DMBuddyBot {
 
     public static void main(String[] args) throws Exception {
 
-        BuddyBot bot = new BuddyBot("DMBuddyBot2.0");
+        BuddyBot bot = new BuddyBot("DMBuddyBot");
         bot.setVerbose(true);
-        bot.connect("localhost");
-        bot.joinChannel("#CoC");
+        bot.connect("irc.blitzed.org");
+        bot.joinChannel("#megaultradix");
 
         
 

@@ -1,4 +1,6 @@
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jibble.pircbot.*;
 
@@ -6,14 +8,77 @@ import org.jibble.pircbot.*;
 
 public class BuddyBot extends PircBot {
 
+	HashMap<String, IrcUserSession> ircUserSessions;
+	
     public BuddyBot(String Name) {
 
         this.setName(Name);
+        
+        ircUserSessions = new HashMap<String, IrcUserSession>();
 
     }
     
-    public void onMessage(String channel, String sender, String login, String hostname, String message) {
-        
+    public void onMessage(	String channel,
+    						String sender,
+    						String login,
+    						String hostname,
+    						String message) {
+    	
+    	if(!sender.equals(this.getName()))
+    	{
+	    	
+	    	// if we've never seen this user before, start tracking 'em!
+	    	if(!ircUserSessions.containsKey(sender))
+	    	{
+	    		ircUserSessions.put(sender, new IrcUserSession(sender));
+	    	}
+	    	
+	    	// is the bot being addressed by this user?
+			if(message.equalsIgnoreCase(this.getName()))
+			{
+				ircUserSessions.get(sender).isAddressingBot = true;
+			}
+	    	
+			if(ircUserSessions.get(sender).isAddressingBot == true)
+			{
+				// process input
+		    	switch(ircUserSessions.get(sender).botState)
+		    	{
+		    	case DefaultState:
+		    		if(message.equalsIgnoreCase("hello"))
+		    			ircUserSessions.get(sender).botState = IrcUserSession.BotState.SayingHelloState;
+		    		if(message.equalsIgnoreCase("copy"))
+		    			ircUserSessions.get(sender).botState = IrcUserSession.BotState.MimicingState;
+		    		if(message.equalsIgnoreCase("nothing"))
+		    			ircUserSessions.get(sender).isAddressingBot = false;
+		    		break;
+		    	case SayingHelloState:
+		    		break;
+		    	case MimicingState:
+		    		if(message.equalsIgnoreCase("stop"))
+		    			ircUserSessions.get(sender).botState = IrcUserSession.BotState.DefaultState;
+		    		break;
+		    	}
+				
+				// process output
+		    	switch(ircUserSessions.get(sender).botState)
+		    	{
+		    	case DefaultState:
+		    		sendMessage(channel, "What is it that you would like, " + sender + "?");
+		    		break;
+		    	case SayingHelloState:
+		    		sendMessage(channel, "Oh. Hello.");
+		    		ircUserSessions.get(sender).botState = IrcUserSession.BotState.DefaultState;
+		    		break;
+		    	case MimicingState:
+		    		sendMessage(channel, message);
+		    		break;
+		    	}
+			}
+		
+    	}
+    	
+        /*
         if (message.equalsIgnoreCase("roll")) {
 
         	Dice d6 = new Dice(20);
@@ -43,6 +108,9 @@ public class BuddyBot extends PircBot {
         	honestChar(4, channel);
         }
         
+    	
+    	
+    	
         if (message.equalsIgnoreCase("GTFO")) {
 
         	sendMessage(channel, "Fine, I'm sick of your shit anyway. Roll your own fucking dice.");
@@ -53,7 +121,7 @@ public class BuddyBot extends PircBot {
 			}
         	quitServer();
 
-        }
+        }*/
 
     }
 
